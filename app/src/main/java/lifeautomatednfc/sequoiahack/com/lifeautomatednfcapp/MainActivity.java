@@ -1,8 +1,5 @@
 package lifeautomatednfc.sequoiahack.com.lifeautomatednfcapp;
 
-import android.Manifest;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -11,19 +8,10 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
             myAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             connectToWifi();
-            sendSMSMessage("Hi! I reached Office");
-            sendSMSMessage("Hi! I will be reaching late!");
+            //sendEmail();
+            //sendSMSMessage("hey");
+
 
 
         }
@@ -136,6 +125,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendEmail() {
-
+        Intent emailIntent = new Intent();
+        emailIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");// Package Name, Class Name
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"vgadiyar@outlook.com"});  /// TODO: Receivers, will take this from csv later.
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Meeting starting now");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Please join at meeting room 25 ");
+        try {
+            startActivity(emailIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
