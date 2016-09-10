@@ -40,9 +40,9 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
 
-            <meta-data
+            <!--<meta-data
                 android:name="android.nfc.action.NDEF_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
+                android:resource="@xml/nfc_tech_filter" />-->
         </activity>
 
     </application>

@@ -16,4 +16,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="" />
+    <TextView
+        android:id="@+id/text_id"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:text="hello_world"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textColorHighlight="@android:color/primary_text_dark"
+        android:layout_centerVertical="true"
+        android:textSize="50dp"/>
 </RelativeLayout>

@@ -1,16 +1,22 @@
 package lifeautomatednfc.sequoiahack.com.lifeautomatednfcapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,24 +39,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
     private AudioManager myAudioManager;
+    public static final String MIME_TEXT_PLAIN = "text/plain";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTextView = (TextView) findViewById(R.id.text_id);
         setContentView(R.layout.activity_main);
         myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (mNfcAdapter == null) {
@@ -59,15 +55,42 @@ public class MainActivity extends AppCompatActivity {
         if (!mNfcAdapter.isEnabled()) {
             Toast.makeText(this, "NFC disabled. Please enable NFC", Toast.LENGTH_LONG).show();
         } else {
-
-            myAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            connectToWifi();
-            sendSMSMessage("Hi! I reached Office");
-            sendSMSMessage("Hi! I will be reaching late!");
+            handleIntent(getIntent());
+            /*myAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            connectToWifi();*/
 
 
         }
 
+    }
+
+    private void handleIntent(Intent intent) {
+        String action = intent.getAction();
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            myAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            connectToWifi();
+            String type = intent.getType();
+            if (MIME_TEXT_PLAIN.equals(type)) {
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                new NdefReaderTask().execute(tag);
+
+            } else {
+                Log.d(TAG, "Wrong mime type: " + type);
+            }
+        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+
+            // In case we would still use the Tech Discovered Intent
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            String[] techList = tag.getTechList();
+            String searchedTech = Ndef.class.getName();
+
+            for (String tech : techList) {
+                if (searchedTech.equals(tech)) {
+                    new NdefReaderTask().execute(tag);
+                    break;
+                }
+            }
+        }
     }
 
     public void connectToWifi() {
@@ -97,12 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -130,12 +148,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void saveBusinessCards() {
+    public void onResume() {
+        super.onResume();
 
     }
+
 
     public void sendEmail() {
 
     }
+
+
 }
