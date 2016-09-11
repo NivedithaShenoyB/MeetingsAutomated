@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">LifeAutomatedNFCApp</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_base_demo">BaseDemoActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="create_file">Create File!</string>
+    <string name="title_activity_create_file">CreateFileActivity</string>
+
+
+    <string name="hello_twitter">Welcome to NFCfied Meetings</string>
+    <string name="lbl_username">Username or Email</string>
+    <string name="lbl_enter_username">Enter Username</string>
+    <string name="lbl_enter_email">Enter Email ID to send email</string>
+    <string name="lbl_pwd">Password</string>
+    <string name="lbl_send">Send Email</string>
+    <string name="lbl_enter_pwd">Enter your password</string>
+    <string name="lbl_login">Login</string>
+    <string name="title_activity_tweet_list">Send Email here...</string>
+    <string name="lbl_email">Email ID</string>
+
+    <string name="no_tweet">No Tweets found. :|</string>
+    <string name="title_activity_game">GameActivity</string>
+
 </resources>

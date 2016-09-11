@@ -1,31 +1,21 @@
 package lifeautomatednfc.sequoiahack.com.lifeautomatednfcapp;
 
-import android.support.v7.app.AppCompatActivity;
-import android.Manifest;
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private NfcAdapter mNfcAdapter;
     private AudioManager myAudioManager;
     public static final String MIME_TEXT_PLAIN = "text/plain";
+    Button _createFileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +48,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+
+        _createFileBtn = (Button) findViewById(R.id.btn_createfile);
+
+        _createFileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), CreateFileActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
     }
 
@@ -91,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+
+
     }
 
     public void connectToWifi() {
