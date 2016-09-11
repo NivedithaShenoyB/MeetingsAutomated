@@ -1,5 +1,6 @@
 package lifeautomatednfc.sequoiahack.com.lifeautomatednfcapp;
 
+import android.support.v7.app.AppCompatActivity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -22,14 +23,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,16 +65,20 @@ public class MainActivity extends AppCompatActivity {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             myAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             connectToWifi();
+
             String type = intent.getType();
             if (MIME_TEXT_PLAIN.equals(type)) {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                 new NdefReaderTask().execute(tag);
+                sendEmail();
+                //sendSMSMessage("hey");
+
 
             } else {
                 Log.d(TAG, "Wrong mime type: " + type);
             }
         } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
-
+            sendSMSMessage("hey");
             // In case we would still use the Tech Discovered Intent
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             String[] techList = tag.getTechList();
@@ -97,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         // setup a wifi configuration
         WifiConfiguration wc = new WifiConfiguration();
-        wc.SSID = "\"YUREKA\"";
-        wc.preSharedKey = "\"shenoy1234@\"";
+        // wc.SSID = "\"YUREKA\"";
+        //wc.preSharedKey = "\"shenoy1234@\"";
+        wc.SSID = "\"Photon Max Wi-Fi_0031\"";
+        wc.preSharedKey = "\"12345678\"";
         wc.status = WifiConfiguration.Status.ENABLED;
         wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
         wc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
@@ -155,7 +157,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void sendEmail() {
-
+        Intent emailIntent = new Intent();
+        emailIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");// Package Name, Class Name
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"nivedithabshenoy@gmail.com"});  /// TODO: Receivers, will take this from csv later.
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Meeting starting now");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Please join at meeting room 25. Check the Group Google Docs for the Minutes of the meeting!");
+        try {
+            startActivity(emailIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

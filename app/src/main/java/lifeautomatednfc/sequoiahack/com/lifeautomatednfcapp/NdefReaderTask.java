@@ -35,6 +35,7 @@ public class NdefReaderTask extends AsyncTask<Tag, Void, String> {
         for (NdefRecord ndefRecord : records) {
             if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
                 try {
+
                     return readText(ndefRecord);
                 } catch (UnsupportedEncodingException e) {
                     //Log.e(TAG, "Unsupported Encoding", e);
@@ -74,11 +75,11 @@ public class NdefReaderTask extends AsyncTask<Tag, Void, String> {
     @Override
     protected void onPostExecute(String result) {
 
-        if (result != null) {
-
-            mTextView.setText(result);
-            Log.i("TAG", result);
-        }
+//        if (result != null) {
+//
+//           // mTextView.setText(result);
+//            Log.i("TAG", result);
+//        }
     }
 
 }
